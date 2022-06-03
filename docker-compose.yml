@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+    mercury:
+        restart: unless-stopped
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        entrypoint: /app/mercury/entrypoint.sh # Est-ce que mljar dans son Dockerfile de mercury il définit son entrypoint du coup ?
+        volumes:
+            - ${LOCAL_NOTEBOOKS_PATH}:${CONTAINER_NOTEBOOKS_PATH}
+            - static_volume:/app/mercury/django_static
+            - media_volume:/app/mercury/media         
+        expose:
+            - 8000     
+        environment:
+            DEBUG: ${DEBUG}
+            SERVE_STATIC: ${SERVE_STATIC}
+            DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
+            DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
+            DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
+            SECRET_KEY: ${SECRET_KEY}
+            ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+
+volumes:
+    static_volume: {.}
+    media_volume: {.}
